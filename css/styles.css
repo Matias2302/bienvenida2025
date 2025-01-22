@@ -40,6 +40,7 @@ html:focus-within {
 /* Set core body defaults */
 body {
   min-height: 100vh;
+  font-size:16px;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
 }
@@ -89,6 +90,10 @@ select {
     --background-red:rgb(240, 129, 114, 0.8);
     --slide-background: #E7E1DD;
     --background-blue: #343C62;
+    --background-grey: #E7E1DD;
+    --padding-slide: 1.2rem;
+    --font-size-small: 14px;
+    --font-size-big: 18px;
 }
 
 
@@ -113,7 +118,11 @@ select {
     margin-inline: auto;
     max-width: 90rem;
 }
-
+.container-blue{
+  background-color: var(--background-blue);
+  color:#fff;
+  padding:1rem;
+}
 .sr-only{
     position:absolute;
     width:1px;
@@ -124,6 +133,10 @@ select {
     clip: rect(0, 0, 0 ,0);
     white-space: nowrap;
     border:0;
+}
+
+.texto-blanco{
+  color:#fff;
 }
 
 /*=====================================================================*/
@@ -215,21 +228,21 @@ header.scrolled{
 }
 
 /*=fin navbar=*/
-/*=======acordeón===========*/
+/*=======acordeón blanco===========*/
 .acordeon{
+  position:relative;
   display:block;
-  overflow:hidden;
+  overflow:visible;
   margin-top:4rem;
 }
 
 .acordeon__titulo{
-  padding-bottom: .8rem;
-  border-bottom: 1px solid #CCC2AF;
+  padding-bottom: .4rem;
+  margin:0 1rem 0 1rem;
   cursor: pointer;
   position: relative;
   user-select: none;
   color:var(--background-blue);
-  letter-spacing: .1rem;
   transition: 0.5s;
   font-weight: 800;
 }
@@ -242,14 +255,15 @@ header.scrolled{
   top:50%;
   font-size:20px;
   font-weight: bold;
-  color:var(--background-blue);
-  transform:translateY(-50%);
+  transform:translateY(-60%);
 }
 
 .acordeon__contenido{
+  width:100%;
   line-height: 1.5rem;
   height: 0;
   transition: height 0.5s ease-out;
+  overflow:hidden;
   box-sizing: border-box;
   border-bottom: 1px solid #CCC2AF;
   background-color: var(--background-blue);
@@ -294,6 +308,38 @@ margin-left:2em;
 }
 /*========================================================*/
 
+/*=====================acordeón azul=========================*/
+
+.azul{
+  font-size:var(--font-size-small);
+  padding: 1rem;
+  border-bottom: 1px solid #CCC2AF;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  color:#fff;
+  transition: 0.5s;
+  border-radius: 0 0 10px 10px;
+  background-color: #51557B;
+}
+
+.contenedor-gris{
+  background-color: var(--background-grey);
+}
+
+.acordeon__contenido-azul{
+  line-height: 1.5rem;
+  height: 0;
+  transition: height 0.5s ease-out;
+  box-sizing: border-box;
+  border-bottom: 1px solid #CCC2AF;
+  background-color: var(--background-blue);
+  color: #fff;
+  border-radius: 0 0 10px 10px;
+}
+
+/*===========================================================*/
+
 .carousel-container {
   display: flex;
   overflow: hidden;
@@ -309,7 +355,6 @@ margin-left:2em;
   width: 90vw;
   height: 90vh;
   margin: 0 auto;
-  padding: 1.2rem;
   background-color: var(--slide-background);
   overflow-y: auto;
 }
@@ -348,6 +393,7 @@ margin-left:2em;
 
 .slide__header{
   display:flex;
+  margin:1rem;
 }
 
 .indice{
@@ -364,6 +410,11 @@ margin-left:2em;
   font-size: 1.7rem;
   font-weight: 600;
   margin-right: .5rem;
+}
+
+.titulo-1{
+  font-weight: 600;
+  margin:1rem;
 }
 
 .slide__content{
