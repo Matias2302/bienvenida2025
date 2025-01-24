@@ -1,85 +1,91 @@
-///acordeón
 document.addEventListener("DOMContentLoaded", () => {
-    const acordeones = document.querySelectorAll(".acordeon");
+    const acordeones = document.querySelectorAll(".carousel-slide");
 
-    acordeones.forEach((acordeon) => {
-        const titulo = acordeon.querySelector(".acordeon__titulo");
-        const contenido = acordeon.querySelector(".acordeon__contenido");
+    const isDesktop = () => window.innerWidth >= 768;
 
-        if (titulo && contenido) {
+    // Función para inicializar acordeones (incluye los anidados)
+    const initAcordeones = (scope) => {
+        const titulos = scope.querySelectorAll(".acordeon__titulo");
+        const contenidos = scope.querySelectorAll(".acordeon__contenido");
+
+        titulos.forEach((titulo, index) => {
             titulo.addEventListener("click", (event) => {
-                event.stopPropagation(); // Evita que el evento se propague a acordeones externos
+                event.stopPropagation(); // Prevenir que el evento afecte a otros niveles
 
-                const isActive = acordeon.classList.contains("acordeon--activo");
+                const contenido = contenidos[index];
+                const isActive = titulo.classList.contains("active");
 
-                // Cierra todos los acordeones al mismo nivel
-                const siblings = Array.from(acordeon.parentElement.children).filter(
-                    child => child !== acordeon && child.classList.contains("acordeon")
-                );
-
-                siblings.forEach(sibling => {
-                    sibling.classList.remove("acordeon--activo");
-                    const siblingContent = sibling.querySelector(".acordeon__contenido");
-                    if (siblingContent) siblingContent.style.height = "0px";
-                });
-
-                // Abre o cierra el acordeón actual
-                if (!isActive) {
-                    acordeon.classList.add("acordeon--activo");
-
-                    // Asegurar altura correcta
-                    contenido.style.height = `${contenido.scrollHeight}px`;
-
-                    // Recalcular alturas de los padres
-                    adjustParentHeight(acordeon);
-                } else {
-                    acordeon.classList.remove("acordeon--activo");
+                if (isActive) {
+                    // Si está activo, cerrarlo
+                    titulo.classList.remove("active");
                     contenido.style.height = "0px";
+                } else {
+                    // Cerrar otros acordeones al mismo nivel
+                    const siblings = Array.from(scope.querySelectorAll(".acordeon__titulo"));
+                    const siblingContents = Array.from(scope.querySelectorAll(".acordeon__contenido"));
 
-                    // Recalcular alturas de los padres
-                    adjustParentHeight(acordeon);
+                    siblings.forEach(s => s.classList.remove("active"));
+                    siblingContents.forEach(c => (c.style.height = "0px"));
+
+                    // Activar el acordeón actual
+                    titulo.classList.add("active");
+                    contenido.style.height = `${contenido.scrollHeight}px`;
                 }
             });
-        } else {
-            console.warn("Un acordeón no tiene título o contenido válido:", acordeon);
-        }
-    });
-
-    // Función para ajustar dinámicamente las alturas de los padres
-    const adjustParentHeight = (acordeon) => {
-        let parent = acordeon.parentElement.closest(".acordeon__contenido");
-        while (parent) {
-            const allVisibleContents = Array.from(parent.children).filter(child => {
-                const innerContent = child.querySelector(".acordeon__contenido");
-                return innerContent && (child.classList.contains("acordeon--activo") || innerContent.scrollHeight > 0);
-            });
-
-            const totalHeight = allVisibleContents.reduce((sum, child) => {
-                const innerContent = child.querySelector(".acordeon__contenido");
-                return sum + (innerContent ? innerContent.scrollHeight : 0);
-            }, 0);
-
-            parent.style.height = `${totalHeight}px`;
-            parent = parent.parentElement.closest(".acordeon__contenido");
-        }
-    };
-
-    // Recalcular todas las alturas dinámicamente en redimensionamiento
-    const recalculateAllHeights = () => {
-        acordeones.forEach((acordeon) => {
-            const contenido = acordeon.querySelector(".acordeon__contenido");
-            if (contenido && acordeon.classList.contains("acordeon--activo")) {
-                contenido.style.height = `${contenido.scrollHeight}px`;
-            } else if (contenido) {
-                contenido.style.height = "0px";
-            }
         });
     };
 
-    window.addEventListener("resize", recalculateAllHeights);
+    // Inicializar acordeones en cada slide
+    acordeones.forEach((slide) => {
+        const titulos = slide.querySelectorAll(".acordeon__titulo");
+        const contenidos = slide.querySelectorAll(".acordeon__contenido");
+        const contenidoDinamico = slide.querySelector(".contenido-dinamico");
+
+        titulos.forEach((titulo, index) => {
+            titulo.addEventListener("click", () => {
+                if (isDesktop()) {
+                    // En desktop, cargar el contenido en contenido-dinamico
+                    titulos.forEach(t => t.classList.remove("active"));
+                    titulo.classList.add("active");
+
+                    const contenidoHtml = contenidos[index]?.innerHTML || "";
+                    contenidoDinamico.innerHTML = contenidoHtml;
+
+                    // Reaplicar funcionalidad a los acordeones internos
+                    initAcordeones(contenidoDinamico);
+                } else {
+                    // En mobile, funcionamiento como acordeón normal
+                    const contenido = contenidos[index];
+                    const isActive = titulo.classList.contains("active");
+
+                    if (isActive) {
+                        titulo.classList.remove("active");
+                        contenido.style.height = "0px";
+                    } else {
+                        titulos.forEach(t => t.classList.remove("active"));
+                        contenidos.forEach(c => c.style.height = "0px");
+
+                        titulo.classList.add("active");
+                        contenido.style.height = `${contenido.scrollHeight}px`;
+
+                        // Reaplicar funcionalidad para los anidados
+                        initAcordeones(contenido);
+                    }
+                }
+            });
+        });
+    });
+
+    // Limpieza en desktop al cambiar tamaño de ventana
+    window.addEventListener("resize", () => {
+        if (isDesktop()) {
+            acordeones.forEach((slide) => {
+                const contenidoDinamico = slide.querySelector(".contenido-dinamico");
+                contenidoDinamico.innerHTML = ""; // Limpiar contenido dinámico
+            });
+        }
+    });
 });
-
-
 
 
 //carousel slider
