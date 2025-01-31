@@ -88,8 +88,10 @@ select {
     --background: rgba(17, 17, 17, 0.8);
     --background-green: rgb(30, 94, 94, 0.8);
     --background-red:rgb(240, 129, 114, 0.8);
+    --background-red-fcea:#F08172;
     --slide-background: #E7E1DD;
     --background-blue: #343C62;
+    --background-blue-steel: #51557B;
     --background-grey: #E7E1DD;
     --padding-slide: 1.2rem;
     --font-size-small: 14px;
@@ -103,14 +105,31 @@ select {
 
 /*general*/
 
+a{
+  color:var(--background-grey);
+}
+
 .flex{
     display: flex;
     gap: var(--gap,1rem);
 }
 
+.flex-buttons{
+  align-items: center;
+  justify-content: space-around;
+}
+
 .grid{
     display:grid;
     gap: var(--gap,1rem);
+}
+.dos-columnas{
+    position: relative; /* Mantenerlo en la estructura */
+    z-index: 2; /* Asegurar que esté por encima de los acordeones */
+    display: flex; /* Asegurar que no colapse */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px 0;
 }
 
 .container{
@@ -139,13 +158,55 @@ select {
   color:#fff;
 }
 
+.texto-azul{
+  color:var(--background-blue);
+  text-align: left;
+}
+
+.button{
+  position: relative;
+  cursor:pointer;
+  top:50%;
+  background-color:#51557B;
+  color: #fff;
+  border:none; 
+  border-radius:10px; 
+  text-align: center;
+  padding:15px;
+  min-height:30px; 
+  min-width: 120px;
+}
+
+.button:active{
+  background-color: var(--slide-background);
+  color:var(--background-blue);
+}
+
+.red{
+  background-color: var(--background-red-fcea);
+}
+
+.fade {
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.6s ease-in-out, max-height 0.6s ease-in-out, visibility 0.6s ease-in-out;
+}
+
+.fade.show {
+  opacity: 1;
+  visibility: visible;
+  max-height: 1000px; /* Ajusta según el contenido esperado */
+}
+
 /*=====================================================================*/
 
 
 /*Navbar*/
 
 .logo{
-    max-width:100px;
+    max-width:200px;
     padding: 1.2rem 0 1.2rem 1.2rem;
 }
 
@@ -153,6 +214,7 @@ header{
     background: var(--background-blue);
     text-align: center;
     position:fixed;
+    height: 80px;
     width:100%;
     z-index: 100;
 }
@@ -265,10 +327,16 @@ header.scrolled{
   transition: height 0.5s ease-out;
   overflow:hidden;
   box-sizing: border-box;
-  border-bottom: 1px solid #CCC2AF;
   background-color: var(--background-blue);
   color: #fff;
   border-radius: 0 0 10px 10px;
+}
+
+.acordeon-interno{
+  background-color: var(--background-grey)!important;
+  text-align: left;
+  border: 1px solid #fff;
+  border-radius: 10px;
 }
 
 .texto-padding{
@@ -344,19 +412,21 @@ margin-left:2em;
   display: flex;
   overflow: hidden;
   position: relative;
-  margin:0 auto;
+  margin: 0 auto;
   width: 90vw;
-  height: 100vh;
-  padding-top:5rem;
+  height: calc(100vh - 30px); /* La mitad de la pantalla menos la mitad del navbar */
+  padding-top: 90px; /* Mismo espacio que el navbar */
+  padding-bottom: 20px; /* Para equilibrar visualmente */
   color:var(--background-blue);
 }
 
 .carousel-slide{
   width: 90vw;
-  height: 90vh;
+  height: auto;
   margin: 0 auto;
   background-color: var(--slide-background);
   overflow-y: auto;
+  border-radius: 10px;
 }
 
 .carousel-track {
@@ -406,13 +476,14 @@ margin-left:2em;
   width:100%;
 }
 
-.titulo-2{
+.titulo-2, .titulo-3{
   font-size: 1.7rem;
   font-weight: 600;
   margin-right: .5rem;
 }
 
 .titulo-1{
+  font-size:1.6rem;
   font-weight: 600;
   margin:1rem;
 }
@@ -421,9 +492,308 @@ margin-left:2em;
   margin-top:3rem;
 }
 
+/*===================Grid tables bloques horarios=====================*/
+
+.grid-table-horarios{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top:1px solid black;
+  border-right: 1px solid black;
+  overflow: auto;
+}
+.grid-table-horarios-4c{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top:1px solid black;
+  border-right: 1px solid black;
+  overflow: auto;
+}
+
+.grid-table-horarios-4c > span{
+  padding: 4px 2px;
+  border-left:1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.grid-table-horarios > span{
+  padding: 4px 2px;
+  border-left:1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.grid-table{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top:1px solid black;
+  border-right: 1px solid black;
+  overflow: auto;
+}
+.grid-item{
+  padding: 4px 2px;
+  border-left:1px solid black;
+  border-bottom: 1px solid black;
+}
+.grid-table > span{
+  padding: 4px 2px;
+  border-left:1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.table-head{
+  background: #f08172;
+  color: #fff;
+  font-weight: bold;
+}
+
+.table-head-2{
+  background: #43917B;
+  color:#fff;
+  font-weight: bold;
+}
+
+.table-head-3{
+  background: #694D7C;
+  color:#fff;
+  font-weight: bold;
+}
+
+
+/*================================================================*/
+/*=============================PIQUES=============================*/
+.piques, .carreras{
+  position: relative;
+  flex-direction: column;
+  max-width: 95vw;
+  height: 80vh;
+  justify-content: center;
+  margin: 0 auto;
+  top: 5rem;
+  color: #fff;
+  border-radius: 10px;
+  padding-top:80px;
+}
+
+.opciones{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.2rem;
+  padding:.5rem;
+  font-size:14px;
+}
+
+.boton-pique{
+  border: 1px solid #fff;
+  padding: .6rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.opcion-1, .opcion-2, .opcion-3, .opcion-4, .opcion-5, .opcion-6, .opcion-7, .opcion-8, .opcion-9, .opcion-10, .opcion-11, .opcion-12, .opcion-13, .opcion-14, .opcion-15{
+  position: relative;
+  flex-direction: column;
+  max-width: 95vw;
+  margin: 0 auto;
+  justify-content: center;
+  padding:1.2rem;
+  top: 5rem;
+  color: #fff;
+  border-radius: 10px;
+  background-color: #C35E50;
+}
+
+.contenido-opciones{
+  margin-top:4rem;
+}
+
+/* Ocultar las opciones por defecto */
+.contenido-opciones > div {
+  display: none;
+  
+}
+
+/* Asegurarse de que las opciones visibles se muestren */
+.contenido-opciones > div:target,
+.contenido-opciones > div.active {
+  display: block;
+}
+
+.boton-flotante {
+  position: fixed;
+  bottom: 20px; /* Distancia desde el borde inferior */
+  right: 20px; /* Distancia desde el borde derecho */
+  z-index: 1000; /* Para asegurarse de que esté sobre otros elementos */
+  background-color: #343C62; /* Color de fondo */
+  color: #fff; /* Color del texto o ícono */
+  border: none;
+  border-radius: 50%; /* Botón redondo */
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  display: none; /* Oculto por defecto */
+  justify-content: center;
+  align-items: center;
+}
+
+.boton-flotante:hover {
+  background-color: #51557B; /* Color al pasar el mouse */
+}
+
+/*==========================CARRERAS=============================*/
+
+.montevideo{
+  padding:3rem;
+  background-color: var(--background-blue);
+  height:40%;
+  border-radius: 10px;
+  transition: all 0.5s ease-in-out;
+  cursor:pointer;
+}
+
+.regionales{
+  padding:3rem;
+  background-color: var(--slide-background);
+  color:var(--background-blue);
+  height: 40%;
+  transition: all 0.5s ease-in-out;
+  border-radius: 10px;
+  cursor:pointer;
+}
+
+.reducido{
+  padding:1rem;
+  height: 20%;
+  font-size: .6rem;
+  transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+.carreras-montevideo{
+  display:none;
+  padding-top:3rem;
+  max-height: 0;
+  width:100%;
+  overflow: auto;
+  opacity:0;
+  background-color: var(--background-blue);
+  color:#fff;
+  transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+  padding:1.2rem;
+}
+.carreras-interior{
+  display:none;
+  max-height: 0;
+  width:100%;
+  overflow: auto;
+  opacity:0;
+  background-color: var(--slide-background);
+  color: var(--background-blue);
+  transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+  padding: 1.2rem;
+}
+
+.carreras-montevideo.show, .carreras-interior.show {
+  display:block;
+  opacity: 1;
+  max-height: 1000px;
+}
+
+.carreras-montevideo-content, .carreras-interior-content {
+  padding-top:3rem
+}
+
+.botones-opciones{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: .4rem;
+  text-align: center;
+  font-size: 14px;
+  cursor:pointer;
+}
+
+.carrera-1M, .carrera-2M, .carrera-3M, .carrera-4M, .carrera-5M, .carrera-6M{
+  padding: .5rem;
+  border: 1px solid var(--background-blue-steel);
+  background-color: var(--background-blue-steel);
+  border-radius: 10px;
+}
+/* Estilo cuando se selecciona una opción en Montevideo */
+.carreras-montevideo .botones-opciones div.selected {
+  background-color: #343C62; /* Color seleccionado en Montevideo */
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* Estilo cuando se selecciona una opción en Regionales */
+.carreras-interior .botones-opciones div.selected {
+  background-color: #E7E1DD; /* Color seleccionado en Regionales */
+  color: #343C62;
+  border: 1px solid #343C62;
+}
+
+/* Estilo cuando se pasa el mouse (igual para ambos) */
+.botones-opciones div:hover {
+  background-color: #51557B;
+  color: #fff;
+}
+
+.carrera-1I, .carrera-2I, .carrera-3I{
+  padding: .5rem;
+  border: 1px solid var(--background-blue);
+  background-color: var(--background-blue);
+  color:#fff;
+  border-radius: 10px;
+}
+/* Ocultar todas las opciones dentro de carreras-montevideo-content y carreras-interior-content */
+.carreras-montevideo-content > div,
+.carreras-interior-content > div {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Mostrar solo la opción seleccionada */
+.carreras-montevideo-content > div.show,
+.carreras-interior-content > div.show {
+    display: block;
+    opacity: 1;
+}
+/*=================================================================*/
 /*=================================================================*/
 /* Media query para pantallas grandes (desktop) */
 @media (min-width: 768px) {
+  header{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav{
+  all: unset;
+  display:flex;
+  
+  align-items: center;
+}
+
+nav ul{
+    display:flex;
+    align-items: center;
+}
+
+nav li{
+    margin-left:3em;
+    margin-bottom: 0;
+}
+
+nav a{
+    opacity:1;
+}
+.logo{
+  max-width: 100%;
+}
+.nav-toggle-label{
+  display:none;
+}
 /*==Carousel==*/
 .carousel-container{
   width:95vw;
@@ -431,7 +801,7 @@ margin-left:2em;
   .carousel-slide{
     width:95vw;
     display:grid;
-    grid-template-columns: 1fr 1fr 3fr;
+    grid-template-columns: 1fr 1fr 2.5fr;
   }
   .slide__header{
     flex-direction: column;
@@ -461,31 +831,32 @@ margin-left:2em;
   .imagen-slide{
     height: 14rem;
   }
-    .acordeon {
-        display: flex;
-        flex-direction: column;
-    }
+  
 
-    .acordeon__titulo {
-      cursor: pointer;
-      font-weight: bold;
-      padding: 0.8rem;
-      background-color: var(--background-blue);
-      color: white;
-      margin: 0.5rem 0;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
+  .acordeon__titulo {
+    cursor: pointer;
+    font-weight: bold;
+    font-size:1.2rem;
+    padding: 0.8rem;
+    color: var(--background-blue);
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+  .acordeon__titulo::after{
+    display:none;
   }
 
-    .contenido-dinamico {
-      border: 1px solid #ccc;
-      background-color: var(--slide-background);
-      padding: 1rem;
-      border-radius: 5px;
-      min-height: 200px; /* Asegura espacio para el contenido */
-      margin-top: 1rem;
-      overflow: auto; /* Manejar contenido largo */
-  }
+  .contenido-dinamico {
+    border: 1px solid #ccc;
+    background-color: var(--background-blue);
+    color:var(--slide-background);
+    padding: 1rem;
+    border-radius: 5px;
+    min-height: 200px; /* Asegura espacio para el contenido */
+    overflow: auto; /* Manejar contenido largo */
+}
 
   .acordeon__contenido {
     overflow: hidden;
@@ -501,22 +872,23 @@ margin-left:2em;
 
   .acordeon__titulo.active {
     background-color: var(--slide-background);
-    color: var(--background-blue);
+    color: #CCC2AF;
 }
-    .acordeon__contenido.active {
-        display: block;
-    }
+  .acordeon__contenido.active {
+    display: block;
+  }
 
-    .carousel-slide .slide__content {
-        display: flex;
-        flex-direction: column;
-    }
+  .carousel-slide .slide__content {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .carousel-slide .acordeon {
-        flex-direction: row;
-        gap: 1rem;
-        align-items: flex-start;
-    }
+  .carousel-slide .acordeon {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+    text-align: right;
+  }
 
     .carousel-slide .acordeon__titulo {
         flex: 1;
@@ -550,5 +922,100 @@ margin-left:2em;
   .contenido-dinamico .acordeon__contenido.active {
     height: auto;
   }
+
+  /*====PIQUES====*/
+  .piques{
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 2rem;
+  }
+  .opciones{
+    font-size:16px;
+  }
+
+  .titulo-3{
+    font-size:3.5rem;
+  }
+  /*CARRERAS*/
+  .carreras {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+    width: 90%;
+    margin: auto;
+    transition: all 0.5s ease-in-out;
+}
+
+.montevideo, .regionales {
+    width: 50%;
+    height: auto;
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5rem;
+    transition: all 0.5s ease-in-out;
+}
+
+/* Se achican con una transición suave */
+.montevideo.reducido, .regionales.reducido {
+    width: 25%;
+    padding: 1rem;
+    font-size: 1rem;
+    transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
+}
+
+/* Transición de altura más fluida */
+.indice {
+    max-height: 200px; /* Mantener una altura inicial */
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.indice.oculto {
+    max-height: 0; /* Reducir altura sin desaparecer de golpe */
+    opacity: 0;
+}
+
+/* Expandir el contenido de carreras con altura suave */
+.carreras-montevideo, .carreras-interior {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
+}
+
+.carreras-montevideo.show, .carreras-interior.show {
+    display: block;
+    opacity: 1;
+    max-height: 1000px; /* Se expande gradualmente */
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+/*VIDEO INTRO*/
 
 }
