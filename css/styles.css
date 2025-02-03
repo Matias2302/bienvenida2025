@@ -6,7 +6,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  font-family: 'PT Sans', sans-serif;
+  font-family: "Inter", serif;
 }
 
 /* Remove default margin */
@@ -40,7 +40,7 @@ html:focus-within {
 /* Set core body defaults */
 body {
   min-height: 100vh;
-  font-size:16px;
+  font-size:18px;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
 }
@@ -261,7 +261,7 @@ nav a:hover{
 .nav-toggle-label{
     position:absolute;
     top:0;
-    right:0;
+    right:1rem;
     margin-right:1em;   
     height: 100%;
     display:flex;
@@ -310,14 +310,18 @@ header.scrolled{
 }
 
 .acordeon__titulo:after{
-  content:'+';
+  content:"›";
   display:block;
   float:right;
   right:.8rem;
   top:50%;
-  font-size:20px;
+  font-size:40px;
   font-weight: bold;
   transform:translateY(-60%);
+}
+
+.acordeon__titulo.active::after {
+  transform: rotate(90deg);
 }
 
 .acordeon__contenido{
@@ -452,13 +456,14 @@ margin-left:2em;
   cursor: pointer;
   font-size: 2rem;
   border-radius: 4px;
-  
+  background-color: rgba(231, 225, 221, 0.5);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   pointer-events: all;
 }
 
 .carousel-button:hover {
-  background-color: var(--slide-background);
+  background-color: rgba(231, 225, 221, 0.7); /* Más sólido al hacer hover */
+    transform: scale(1.05); /* Pequeño efecto de agrandamiento */
 }
 
 .slide__header{
@@ -491,6 +496,7 @@ margin-left:2em;
 .slide__content{
   margin-top:3rem;
 }
+
 
 /*===================Grid tables bloques horarios=====================*/
 
@@ -560,7 +566,7 @@ margin-left:2em;
 
 /*================================================================*/
 /*=============================PIQUES=============================*/
-.piques, .carreras{
+.piques{
   position: relative;
   flex-direction: column;
   max-width: 95vw;
@@ -601,6 +607,18 @@ margin-left:2em;
   background-color: #C35E50;
 }
 
+.boton-pique.active {
+  background-color: #C35E50; /* Color al estar activo */
+  border: #C35E50;
+  color: white;
+}
+
+/* 🔹 Mover 'contenido-opciones' hacia arriba cuando hay un contenido activo */
+.contenido-opciones.active {
+ /* Ajusta el valor según el espacio que necesites */
+  transition: margin-top 0.5s ease;
+}
+
 .contenido-opciones{
   margin-top:4rem;
 }
@@ -608,13 +626,17 @@ margin-left:2em;
 /* Ocultar las opciones por defecto */
 .contenido-opciones > div {
   display: none;
-  
+  opacity: 0;
+  transform: translateY(10px); /* Pequeño desplazamiento inicial */
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 /* Asegurarse de que las opciones visibles se muestren */
 .contenido-opciones > div:target,
 .contenido-opciones > div.active {
   display: block;
+  opacity: 1;
+    transform: translateY(0);
 }
 
 .boton-flotante {
@@ -641,21 +663,34 @@ margin-left:2em;
 }
 
 /*==========================CARRERAS=============================*/
+.carreras{
+  display:flex;
+  flex-direction: column;
+  max-width: 95vw;
+  height: auto;
+  justify-content: center;
+  margin: 0 auto;
+  color: #fff;
+  border-radius: 10px;
+  padding-top:6rem;
+  padding-bottom:2rem;
+  overflow-x: hidden;
+}
 
 .montevideo{
-  padding:3rem;
+  padding:1.5rem;
   background-color: var(--background-blue);
-  height:40%;
+  height:50%;
   border-radius: 10px;
   transition: all 0.5s ease-in-out;
   cursor:pointer;
 }
 
 .regionales{
-  padding:3rem;
+  padding:1.5rem;
   background-color: var(--slide-background);
   color:var(--background-blue);
-  height: 40%;
+  height: 55%;
   transition: all 0.5s ease-in-out;
   border-radius: 10px;
   cursor:pointer;
@@ -664,7 +699,7 @@ margin-left:2em;
 .reducido{
   padding:1rem;
   height: 20%;
-  font-size: .6rem;
+  font-size: .5rem;
   transition: width 0.5s ease-in-out, padding 0.5s ease-in-out;
 }
 
@@ -679,6 +714,7 @@ margin-left:2em;
   color:#fff;
   transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
   padding:1.2rem;
+  border-radius: 0 0 10px 10px;
 }
 .carreras-interior{
   display:none;
@@ -690,16 +726,21 @@ margin-left:2em;
   color: var(--background-blue);
   transition: opacity 0.5s ease-in-out, max-height 0.5s ease-in-out;
   padding: 1.2rem;
+  border-radius: 0 0 10px 10px;
 }
 
 .carreras-montevideo.show, .carreras-interior.show {
   display:block;
   opacity: 1;
-  max-height: 1000px;
+  max-height: 800px;
+  margin-top: -5px;
+  overflow-x: hidden;
 }
 
 .carreras-montevideo-content, .carreras-interior-content {
-  padding-top:3rem
+  transition: height 0.5s ease-in-out;
+  padding-top:3rem;
+  overflow-x: hidden;
 }
 
 .botones-opciones{
@@ -709,6 +750,7 @@ margin-left:2em;
   text-align: center;
   font-size: 14px;
   cursor:pointer;
+  overflow-x: hidden;
 }
 
 .carrera-1M, .carrera-2M, .carrera-3M, .carrera-4M, .carrera-5M, .carrera-6M{
@@ -722,6 +764,7 @@ margin-left:2em;
   background-color: #343C62; /* Color seleccionado en Montevideo */
   color: #fff;
   border: 1px solid #fff;
+  
 }
 
 /* Estilo cuando se selecciona una opción en Regionales */
@@ -747,16 +790,30 @@ margin-left:2em;
 /* Ocultar todas las opciones dentro de carreras-montevideo-content y carreras-interior-content */
 .carreras-montevideo-content > div,
 .carreras-interior-content > div {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  width: 100%;
+  transition: opacity 0.5s ease-in-out;
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+
+/* Evitar que los divs ocultos causen problemas de scroll */
+.carreras-montevideo-content > div:not(.show),
+.carreras-interior-content > div:not(.show) {
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
 }
 
 /* Mostrar solo la opción seleccionada */
 .carreras-montevideo-content > div.show,
 .carreras-interior-content > div.show {
-    display: block;
-    opacity: 1;
+  opacity: 1;
+  visibility: visible;
+  overflow-x: hidden;
+  position: relative;
 }
 /*=================================================================*/
 /*=================================================================*/
@@ -971,7 +1028,6 @@ nav a{
 /* Transición de altura más fluida */
 .indice {
     max-height: 200px; /* Mantener una altura inicial */
-    overflow: hidden;
     transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 

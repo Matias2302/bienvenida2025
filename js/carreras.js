@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const carrerasContenidoInt = document.querySelectorAll(".carreras-interior-content > div");
 
     function cambiarSeccion(contenidoMostrar, contenidoOcultar) {
-        if (window.innerWidth >= 1024) { // Solo en desktop
+        if (window.innerWidth >= 320) { // Solo en desktop
             // Asignar la clase reducido a ambos elementos
             montevideo.classList.add("reducido");
             regionales.classList.add("reducido");
@@ -49,24 +49,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- FUNCIÓN PARA QUE LAS OPCIONES DE CARRERA SE SELECCIONEN Y MUESTREN ---
-    function seleccionarCarrera(botones, contenidos) {
+    function seleccionarCarrera(botones, contenidos, contenedor) {
         botones.forEach((boton, index) => {
             boton.addEventListener("click", () => {
-                // Remover la clase selected de todas las opciones antes de aplicar a la nueva
-                botones.forEach(opt => opt.classList.remove("selected"));
-                contenidos.forEach(contenido => contenido.classList.remove("show"));
-
-                // Agregar la clase selected a la opción seleccionada
-                boton.classList.add("selected");
-
-                // Mostrar la opción seleccionada
-                if (contenidos[index]) {
-                    contenidos[index].classList.add("show");
+                const contenidoActivo = contenedor.querySelector(".show");
+                const nuevoContenido = contenidos[index];
+    
+                if (contenidoActivo === nuevoContenido) return; // Evita repetir la misma selección
+    
+                // Guardar altura del contenido activo antes de ocultarlo
+                const alturaActual = contenidoActivo ? contenidoActivo.offsetHeight : 0;
+                contenedor.style.height = `${alturaActual}px`;
+    
+                // Fade-out del contenido actual
+                if (contenidoActivo) {
+                    contenidoActivo.classList.remove("show");
+                    setTimeout(() => {
+                        contenidoActivo.style.position = "absolute"; // Oculta completamente
+                        contenidoActivo.style.visibility = "hidden";
+                        contenidoActivo.style.opacity = "0";
+    
+                        // Mostrar el nuevo contenido
+                        nuevoContenido.style.position = "relative";
+                        nuevoContenido.style.visibility = "visible";
+                        nuevoContenido.style.opacity = "1";
+                        nuevoContenido.classList.add("show");
+    
+                        // Ajustar la altura al nuevo contenido
+                        const nuevaAltura = nuevoContenido.scrollHeight;
+                        contenedor.style.height = `${nuevaAltura}px`;
+    
+                        // Volver a altura automática después de la animación
+                        setTimeout(() => {
+                            contenedor.style.height = "auto";
+                        }, 500);
+                    }, 500);
+                } else {
+                    // Si no había contenido activo, mostrar directamente
+                    nuevoContenido.style.position = "relative";
+                    nuevoContenido.style.visibility = "visible";
+                    nuevoContenido.style.opacity = "1";
+                    nuevoContenido.classList.add("show");
+                    setTimeout(() => {
+                        contenedor.style.height = "auto";
+                    }, 500);
                 }
             });
         });
     }
-
+    
+    // Aplica la función para Montevideo y Regionales
+    seleccionarCarrera(
+        document.querySelectorAll(".carreras-montevideo .botones-opciones div"),
+        document.querySelectorAll(".carreras-montevideo-content > div"),
+        document.querySelector(".carreras-montevideo-content")
+    );
+    
+    seleccionarCarrera(
+        document.querySelectorAll(".carreras-interior .botones-opciones div"),
+        document.querySelectorAll(".carreras-interior-content > div"),
+        document.querySelector(".carreras-interior-content")
+    );
+    
+    
+    
     seleccionarCarrera(botonesOpcionesMvd, carrerasContenidoMvd);
     seleccionarCarrera(botonesOpcionesInt, carrerasContenidoInt);
 });
